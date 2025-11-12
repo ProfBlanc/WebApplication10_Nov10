@@ -1,6 +1,10 @@
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using WebApplication10_Nov10.Controllers;
 using WebApplication10_Nov10.Data;
 using WebApplication10_Nov10.Models;
+using System.Collections.Generic;
 
 namespace TestProject3
 {
@@ -15,6 +19,7 @@ namespace TestProject3
         
         var options = new DbContextOptionsBuilder<ApplicationDbContext>()
                 .UseSqlServer("Data Source=HP-Craie;Initial Catalog=Prog36944Fall2025;Integrated Security=True;Encrypt=True;Trust Server Certificate=True")
+                
                 .Options;
 
             _context = new ApplicationDbContext(options);
@@ -46,17 +51,43 @@ namespace TestProject3
                 _context.Months.OrderBy(m => m.MonthId).Last().MonthName);
         }
 
-        /*
+        
 
         [TestMethod]
-        public void TestEditMonth() { }
+        public void TestEditLastMonthEntry() {
+            string updatedMonthName = "February";
+            MonthModel lastEntry;
+
+            lastEntry = _context.Months.OrderBy(m => m.MonthId).Last();
+            lastEntry.MonthName = updatedMonthName;
+            _context.SaveChanges();
+            //reload last item from the database
+            lastEntry = _context.Months.OrderBy(m => m.MonthId).Last();
+            Assert.AreEqual(updatedMonthName, lastEntry.MonthName);
+
+        }
 
         [TestMethod]
-        public void TestViewMonth() { }
+        public void TestViewMonth() {
+
+            MonthModel current = _context.Months.Find(1);
+            string expectedMonthName = "January";
+            Assert.AreEqual(expectedMonthName, current.MonthName);
+        }
 
         [TestMethod]
-        public void TestDeleteMonth() { }
-        */
+        public void TestDeleteMonth() {
+
+            int targetId = _context.Months.OrderBy(m=> m.MonthId).Last().MonthId;
+            MonthModel current = _context.Months.Find(targetId);
+           
+            _context.Months.Remove(current);
+            _context.SaveChanges();
+
+            Assert.IsNull(_context.Months.Find(targetId));
+        }
+
+        
 
     }
 }
