@@ -9,6 +9,9 @@ namespace WebApplication10_Nov10.Data
 
         public DbSet<MonthModel> Months { get; set; }
         public DbSet<TemperatureModel> Temperatures { get; set; }
+
+        public DbSet<Purchase> Purchases { get; set; }
+
         public ApplicationDbContext(DbContextOptions<ApplicationDbContext> options)
             : base(options)
         {
